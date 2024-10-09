@@ -1,0 +1,157 @@
+// Node class representing a single element in the linked list
+class Node<T> {
+    T data;
+    Node<T> next;
+
+    public Node(T data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+// LinkedList class with advanced methods
+public class LinkedList<T> {
+    private Node<T> head;
+
+    // Add element at the front of the list
+    public void addFirst(T data) {
+        Node<T> newNode = new Node<>(data);
+        newNode.next = head;
+        head = newNode;
+    }
+
+    // Add element at the end of the list
+    public void addLast(T data) {
+        Node<T> newNode = new Node<>(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node<T> temp = head;
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            temp.next = newNode;
+        }
+    }
+
+    // Delete the first occurrence of a given value
+    public void deleteByValue(T data) {
+        if (head == null) return;
+
+        // If the node to be deleted is the head
+        if (head.data.equals(data)) {
+            head = head.next;
+            return;
+        }
+
+        Node<T> temp = head;
+        while (temp.next != null && !temp.next.data.equals(data)) {
+            temp = temp.next;
+        }
+
+        if (temp.next != null) {
+            temp.next = temp.next.next;
+        }
+    }
+
+    // Reverse the linked list
+    public void reverse() {
+        Node<T> prev = null;
+        Node<T> current = head;
+        Node<T> next = null;
+
+        while (current != null) {
+            next = current.next; // Save the next node
+            current.next = prev; // Reverse the link
+            prev = current;      // Move prev and current one step forward
+            current = next;
+        }
+        head = prev;
+    }
+
+    // Detect if the list contains a cycle (Floyd’s Cycle Detection Algorithm)
+    public boolean hasCycle() {
+        Node<T> slow = head;
+        Node<T> fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast) {
+                return true; // Cycle detected
+            }
+        }
+        return false;
+    }
+
+    // Get the middle element of the list
+    public T getMiddle() {
+        if (head == null) return null;
+
+        Node<T> slow = head;
+        Node<T> fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow.data; // Slow pointer will be at the middle
+    }
+
+    // Print the linked list
+    public void printList() {
+        Node<T> temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + " -> ");
+            temp = temp.next;
+        }
+        System.out.println("null");
+    }
+
+    // Create a cycle in the list for testing
+    public void createCycle() {
+        if (head == null || head.next == null) return;
+
+        Node<T> temp = head;
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+        temp.next = head; // Point the last node to the head to create a cycle
+    }
+
+    public static void main(String[] args) {
+        LinkedList<Integer> list = new LinkedList<>();
+
+        // Adding elements
+        list.addFirst(10);
+        list.addLast(20);
+        list.addLast(30);
+        list.addLast(40);
+        list.addLast(50);
+
+        // Printing list
+        System.out.println("Original Linked List:");
+        list.printList();
+
+        // Reverse the linked list
+        list.reverse();
+        System.out.println("Reversed Linked List:");
+        list.printList();
+
+        // Get the middle element
+        System.out.println("Middle Element: " + list.getMiddle());
+
+        // Delete a node by value
+        list.deleteByValue(30);
+        System.out.println("After Deleting 30:");
+        list.printList();
+
+        // Create a cycle and check for it
+        list.createCycle();
+        System.out.println("Has Cycle: " + list.hasCycle());
+
+        // The cycle will not allow further operations like printing without infinite loop
+    }
+}
